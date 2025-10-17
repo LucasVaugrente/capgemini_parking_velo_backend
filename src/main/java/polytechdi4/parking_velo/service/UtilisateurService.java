@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import polytechdi4.parking_velo.model.Utilisateur;
 import polytechdi4.parking_velo.repository.UtilisateurRepository;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class UtilisateurService {
@@ -15,11 +17,23 @@ public class UtilisateurService {
         this.utilisateurRepository = UtilisateurRepository;
     }
 
-    public void addUser(Utilisateur user) {
+    public Utilisateur addUser(Utilisateur user) {
+        return utilisateurRepository.save(user);
+    }
 
+    public Utilisateur getUser(Long userId) {
+        return utilisateurRepository.findById(userId).orElse(null);
+    }
+
+    public List<Utilisateur> getAllUsers() {
+        return utilisateurRepository.findAll();
+    }
+
+    public Utilisateur updateUser(Utilisateur user) {
+        return utilisateurRepository.save(user);
     }
 
     public void removeUser(Long userId) {
-
+        utilisateurRepository.deleteById(userId);
     }
 }
