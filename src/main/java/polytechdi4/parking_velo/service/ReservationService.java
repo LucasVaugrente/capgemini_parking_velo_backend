@@ -2,7 +2,11 @@ package polytechdi4.parking_velo.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import polytechdi4.parking_velo.model.Reservation;
+import polytechdi4.parking_velo.model.Utilisateur;
 import polytechdi4.parking_velo.repository.ReservationRepository;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -14,23 +18,23 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public void addReservation() {
-
+    public Reservation addReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 
-    public void removeUser() {
-
+    public Reservation getReservation(Long reservationId) {
+        return reservationRepository.findById(reservationId).orElse(null);
     }
 
-    public void updateReservation() {
-
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
     }
 
-    public void getReservationsByUser() {
-
+    public Reservation updateReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 
-    public void getReservationsByVelo() {
-
+    public void removeReservation(Long reservationId) {
+        reservationRepository.deleteById(reservationId);
     }
 }
