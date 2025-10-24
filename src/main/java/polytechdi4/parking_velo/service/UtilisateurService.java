@@ -11,7 +11,7 @@ import java.util.List;
 @Transactional
 public class UtilisateurService {
 
-    private UtilisateurRepository utilisateurRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
     public UtilisateurService(UtilisateurRepository UtilisateurRepository) {
         this.utilisateurRepository = UtilisateurRepository;
