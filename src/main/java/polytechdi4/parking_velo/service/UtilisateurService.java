@@ -1,39 +1,63 @@
+// UtilisateurService.java
 package polytechdi4.parking_velo.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import polytechdi4.parking_velo.dto.UtilisateurDTO;
+import polytechdi4.parking_velo.exception.ConflictException;
+import polytechdi4.parking_velo.exception.NotFoundException;
+import polytechdi4.parking_velo.mapper.UtilisateurMapper;
 import polytechdi4.parking_velo.model.Utilisateur;
 import polytechdi4.parking_velo.repository.UtilisateurRepository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class UtilisateurService {
 
-    private final UtilisateurRepository utilisateurRepository;
+    private final UtilisateurRepository repo;
+    private final UtilisateurMapper mapper;
 
-    public UtilisateurService(UtilisateurRepository UtilisateurRepository) {
-        this.utilisateurRepository = UtilisateurRepository;
+    public UtilisateurDTO create(UtilisateurDTO dto) {
+        // Règle d’unicité email (exemple)
+        if (repo.existsByMail(dto.getEmail())) {
+            throw new ConflictException("Email déjà utilisé : " + dto.getEmail());
+        }
+        Utilisateur saved = repo.save(mapper.toEntity(dto));
+        return mapper.toDto(saved);
     }
 
-    public Utilisateur addUser(Utilisateur user) {
-        return utilisateurRepository.save(user);
+    @Transactional(readOnly = true)
+    public UtilisateurDTO get(Long id) {
+        Utilisateur u = repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Utilisateur " + id + " introuvable"));
+        return mapper.toDto(u);
     }
 
-    public Utilisateur getUser(Long userId) {
-        return utilisateurRepository.findById(userId).orElse(null);
+    @Transactional(readOnly = true)
+    public List<UtilisateurDTO> list() {
+        return repo.findAll().stream().map(mapper::toDto).toList();
     }
 
-    public List<Utilisateur> getAllUsers() {
-        return utilisateurRepository.findAll();
+    public UtilisateurDTO update(Long id, UtilisateurDTO dto) {
+        Utilisateur existing = repo.findById(id)
+                .orElseThrow(() -> new NotFoundException("Utilisateur " + id + " introuvable"));
+        // exemple: contrôle d’unicité si email change
+        if (dto.getEmail()!=null && repo.existsByMailAndIdNot(dto.getEmail(), id)) {
+            throw new ConflictException("Email déjà utilisé : " + dto.getEmail());
+        }
+        existing.setNom(dto.getNom()!=null ? dto.getNom() : existing.getNom());
+        existing.setMail(dto.getEmail()!=null ? dto.getEmail() : existing.getMail());
+        return mapper.toDto(repo.save(existing));
     }
 
-    public Utilisateur updateUser(Utilisateur user) {
-        return utilisateurRepository.save(user);
-    }
-
-    public void removeUser(Long userId) {
-        utilisateurRepository.deleteById(userId);
+    public void delete(Long id) {
+        if (!repo.existsById(id)) {
+            throw new NotFoundException("Utilisateur " + id + " introuvable");
+        }
+        repo.deleteById(id);
     }
 }

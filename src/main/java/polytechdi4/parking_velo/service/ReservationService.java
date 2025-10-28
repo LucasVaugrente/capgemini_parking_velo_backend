@@ -1,39 +1,65 @@
+// ReservationService.java
 package polytechdi4.parking_velo.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import polytechdi4.parking_velo.dto.ReservationDTO;
+import polytechdi4.parking_velo.exception.ConflictException;
+import polytechdi4.parking_velo.exception.NotFoundException;
+import polytechdi4.parking_velo.mapper.ReservationMapper;
 import polytechdi4.parking_velo.model.Reservation;
 import polytechdi4.parking_velo.repository.ReservationRepository;
+import polytechdi4.parking_velo.repository.UtilisateurRepository;
+import polytechdi4.parking_velo.repository.VeloRepository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationRepository repo;
+    private final UtilisateurRepository userRepo;
+    private final VeloRepository veloRepo;
+    private final ReservationMapper mapper;
 
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationDTO create(ReservationDTO dto) {
+        // Vérification existence des FK
+        var user = userRepo.findById(dto.getUtilisateurId())
+                .orElseThrow(() -> new NotFoundException("Utilisateur " + dto.getUtilisateurId() + " introuvable"));
+        var velo = veloRepo.findById(dto.getVeloId())
+                .orElseThrow(() -> new NotFoundException("Velo " + dto.getVeloId() + " introuvable"));
+
+        // Règles métier d’exemple : dates cohérentes + conflit horaire
+        if (!dto.getFin().isAfter(dto.getDebut())) {
+            throw new ConflictException("La fin doit être postérieure au début.");
+        }
+        boolean conflit = repo.existsOverlap(dto.getVeloId(), dto.getDebut(), dto.getFin());
+        if (conflit) {
+            throw new ConflictException("Le créneau est déjà réservé pour ce vélo.");
+        }
+
+        Reservation entity = mapper.toEntity(dto);
+        entity.setUtilisateur(user);
+        entity.setVelo(velo);
+        return mapper.toDto(repo.save(entity));
     }
 
-    public Reservation addReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
+    @Transactional(readOnly = true)
+    public ReservationDTO get(Long id) {
+        return repo.findById(id).map(mapper::toDto)
+                .orElseThrow(() -> new NotFoundException("Reservation " + id + " introuvable"));
     }
 
-    public Reservation getReservation(Long reservationId) {
-        return reservationRepository.findById(reservationId).orElse(null);
+    @Transactional(readOnly = true)
+    public List<ReservationDTO> list() {
+        return repo.findAll().stream().map(mapper::toDto).toList();
     }
 
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
-    }
-
-    public Reservation updateReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
-    }
-
-    public void removeReservation(Long reservationId) {
-        reservationRepository.deleteById(reservationId);
+    public void delete(Long id) {
+        if (!repo.existsById(id)) throw new NotFoundException("Reservation " + id + " introuvable");
+        repo.deleteById(id);
     }
 }
