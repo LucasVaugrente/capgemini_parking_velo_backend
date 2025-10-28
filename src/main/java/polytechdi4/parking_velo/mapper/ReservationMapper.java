@@ -13,8 +13,6 @@ public interface ReservationMapper {
     @Mapping(target = "veloId", source = "velo.id")
     ReservationDTO toDto(Reservation entity);
 
-    // Pour créer l’entité à partir d’ids présents dans le DTO,
-    // on mappe vers des "stubs" d’entités avec uniquement l’id.
     @Mapping(target = "utilisateur", source = "utilisateurId")
     @Mapping(target = "velo", source = "veloId")
     Reservation toEntity(ReservationDTO dto);

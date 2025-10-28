@@ -8,5 +8,5 @@ import lombok.Data;
 public class UtilisateurDTO {
     private Long id;
     @NotBlank private String nom;
-    @Email    private String email;
+    @Email    private String mail;
 }
