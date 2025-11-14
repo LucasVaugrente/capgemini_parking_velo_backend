@@ -1,7 +1,11 @@
 package polytechdi4.parking_velo.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "reservation")
 public class Reservation {
@@ -31,14 +35,4 @@ public class Reservation {
         this.id = new ReservationId(u.getId(), v.getId());
         this.reservation = reservation;
     }
-
-    // getters/setters
-    public ReservationId getId() { return id; }
-    public void setId(ReservationId id) { this.id = id; }
-    public Utilisateur getUtilisateur() { return utilisateur; }
-    public void setUtilisateur(Utilisateur utilisateur) { this.utilisateur = utilisateur; }
-    public Velo getVelo() { return velo; }
-    public void setVelo(Velo velo) { this.velo = velo; }
-    public Integer getReservation() { return reservation; }
-    public void setReservation(Integer reservation) { this.reservation = reservation; }
 }
