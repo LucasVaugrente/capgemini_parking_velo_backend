@@ -26,17 +26,12 @@ public class ReservationService {
     private final ReservationMapper mapper;
 
     public ReservationDTO create(ReservationDTO dto) {
-        // Vérification existence des FK
         var user = userRepo.findById(dto.getUtilisateurId())
                 .orElseThrow(() -> new NotFoundException("Utilisateur " + dto.getUtilisateurId() + " introuvable"));
         var velo = veloRepo.findById(dto.getVeloId())
                 .orElseThrow(() -> new NotFoundException("Velo " + dto.getVeloId() + " introuvable"));
 
-        // Règles métier d’exemple : dates cohérentes + conflit horaire
-        if (!dto.getFin().isAfter(dto.getDebut())) {
-            throw new ConflictException("La fin doit être postérieure au début.");
-        }
-        boolean conflit = repo.existsOverlap(dto.getVeloId(), dto.getDebut(), dto.getFin());
+        boolean conflit = repo.existsOverlap(dto.getVeloId());
         if (conflit) {
             throw new ConflictException("Le créneau est déjà réservé pour ce vélo.");
         }

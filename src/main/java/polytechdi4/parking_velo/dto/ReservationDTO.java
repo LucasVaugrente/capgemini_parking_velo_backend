@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 @Data
 public class ReservationDTO {
     private Long id;
-    @NotNull private Long utilisateurId;   // référence vers Utilisateur
-    @NotNull private Long veloId;          // référence vers Velo
-    @NotNull private LocalDateTime debut;
-    @NotNull private LocalDateTime fin;
+    @NotNull private Long utilisateurId;
+    @NotNull private Long veloId;
 }

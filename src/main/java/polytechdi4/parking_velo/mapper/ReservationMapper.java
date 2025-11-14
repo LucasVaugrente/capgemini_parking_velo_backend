@@ -9,10 +9,12 @@ import polytechdi4.parking_velo.model.Velo;
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "utilisateurId", source = "utilisateur.id")
     @Mapping(target = "veloId", source = "velo.id")
     ReservationDTO toDto(Reservation entity);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "utilisateur", source = "utilisateurId")
     @Mapping(target = "velo", source = "veloId")
     Reservation toEntity(ReservationDTO dto);

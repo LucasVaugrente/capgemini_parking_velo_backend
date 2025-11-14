@@ -22,7 +22,6 @@ public class UtilisateurService {
     private final UtilisateurMapper mapper;
 
     public UtilisateurDTO create(UtilisateurDTO dto) {
-        // Règle d’unicité email (exemple)
         if (repo.existsByMail(dto.getMail())) {
             throw new ConflictException("Email déjà utilisé : " + dto.getMail());
         }
@@ -45,8 +44,7 @@ public class UtilisateurService {
     public UtilisateurDTO update(Long id, UtilisateurDTO dto) {
         Utilisateur existing = repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Utilisateur " + id + " introuvable"));
-        // exemple: contrôle d’unicité si email change
-        if (dto.getMail()!=null && repo.existsByMailAndIdNot(dto.getMail(), id)) {
+        if (dto.getMail()!=null && repo.existsByMailAndIdNot(dto.getMail(), Math.toIntExact(id))) {
             throw new ConflictException("Email déjà utilisé : " + dto.getMail());
         }
         existing.setNom(dto.getNom()!=null ? dto.getNom() : existing.getNom());
