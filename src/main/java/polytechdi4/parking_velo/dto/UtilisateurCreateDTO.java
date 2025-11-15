@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class UtilisateurDTO {
-    private Integer id;
+public class UtilisateurCreateDTO {
     @NotBlank private String nom;
     @NotBlank private String prenom;
-    @Email    private String mail;
+    @Email @NotBlank private String mail;
     @NotBlank private String username;
+    @NotBlank private String password;
 }
