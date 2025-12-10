@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import polytechdi4.parking_velo.dto.UtilisateurCreateDTO;
 import polytechdi4.parking_velo.dto.UtilisateurResponseDTO;
+import polytechdi4.parking_velo.dto.UtilisateurUpdateDTO;
 import polytechdi4.parking_velo.service.UtilisateurService;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class UtilisateurController {
 
     @PutMapping("/{id}")
     public UtilisateurResponseDTO update(@PathVariable Integer id,
-                                         @Valid @RequestBody UtilisateurCreateDTO dto) {
+                                         @Valid @RequestBody UtilisateurUpdateDTO dto) {
         return utilisateurService.update(id, dto);
     }
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import polytechdi4.parking_velo.dto.UtilisateurCreateDTO;
 import polytechdi4.parking_velo.dto.UtilisateurResponseDTO;
+import polytechdi4.parking_velo.dto.UtilisateurUpdateDTO;
 import polytechdi4.parking_velo.exception.ConflictException;
 import polytechdi4.parking_velo.exception.NotFoundException;
 import polytechdi4.parking_velo.mapper.UtilisateurMapper;
@@ -47,7 +48,7 @@ public class UtilisateurService {
         return mapper.toResponseDtoList(repo.findAll());
     }
 
-    public UtilisateurResponseDTO update(Integer id, UtilisateurCreateDTO dto) {
+    public UtilisateurResponseDTO update(Integer id, UtilisateurUpdateDTO dto) {
         Utilisateur existing = repo.findById(Long.valueOf(id))
                 .orElseThrow(() -> new NotFoundException("Utilisateur " + id + " introuvable"));
 
@@ -62,6 +63,10 @@ public class UtilisateurService {
         existing.setPrenom(dto.getPrenom());
         existing.setMail(dto.getMail());
         existing.setUsername(dto.getUsername());
+
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            existing.setPassword(dto.getPassword());
+        }
 
         Utilisateur saved = repo.save(existing);
         return mapper.toResponseDto(saved);
