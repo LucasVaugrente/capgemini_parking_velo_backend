@@ -1,5 +1,8 @@
 # Parking Vélo - API
 
+# A rendre le 8 janvier
+# Oral le 9 janvier
+
 Petite API Spring Boot (Java 17, Maven) pour gérer un parking de vélos : utilisateurs, vélos et réservations.
 
 Arborescence importante
