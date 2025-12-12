@@ -1,11 +1,17 @@
 package polytechdi4.parking_velo.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CoordonneesDTO {
     private Integer id;
-    @NotBlank private String latitude;
-    @NotBlank private String longitude;
+    private String latitude;
+    private String longitude;
+
 }
