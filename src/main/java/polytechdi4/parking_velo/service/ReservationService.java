@@ -28,7 +28,7 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public ReservationResponseDTO create(ReservationCreateDTO dto) {
-        Utilisateur u = utilisateurRepository.findById(Long.valueOf(dto.getUtilisateurId()))
+        Utilisateur u = utilisateurRepository.findById(Integer.valueOf(dto.getUtilisateurId()))
                 .orElseThrow(() -> new NotFoundException("Utilisateur " + dto.getUtilisateurId() + " introuvable"));
 
         Velo v = veloRepository.findById(Long.valueOf(dto.getVeloId()))

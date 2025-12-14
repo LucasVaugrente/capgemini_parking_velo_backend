@@ -8,6 +8,7 @@ import polytechdi4.parking_velo.dto.UtilisateurResponseDTO;
 import polytechdi4.parking_velo.dto.UtilisateurUpdateDTO;
 import polytechdi4.parking_velo.exception.ConflictException;
 import polytechdi4.parking_velo.exception.NotFoundException;
+import polytechdi4.parking_velo.hashPassword.HashPwd;
 import polytechdi4.parking_velo.mapper.UtilisateurMapper;
 import polytechdi4.parking_velo.model.Utilisateur;
 import polytechdi4.parking_velo.repository.UtilisateurRepository;
@@ -32,13 +33,14 @@ public class UtilisateurService {
 
         Utilisateur entity = mapper.toEntity(dto);
 
+        entity.setPassword(HashPwd.sha256(dto.getPassword()));
         Utilisateur saved = repo.save(entity);
         return mapper.toResponseDto(saved);
     }
 
     @Transactional(readOnly = true)
     public UtilisateurResponseDTO get(Integer id) {
-        Utilisateur u = repo.findById(Long.valueOf(id))
+        Utilisateur u = repo.findById(Integer.valueOf(id))
                 .orElseThrow(() -> new NotFoundException("Utilisateur " + id + " introuvable"));
         return mapper.toResponseDto(u);
     }
@@ -49,7 +51,7 @@ public class UtilisateurService {
     }
 
     public UtilisateurResponseDTO update(Integer id, UtilisateurUpdateDTO dto) {
-        Utilisateur existing = repo.findById(Long.valueOf(id))
+        Utilisateur existing = repo.findById(Integer.valueOf(id))
                 .orElseThrow(() -> new NotFoundException("Utilisateur " + id + " introuvable"));
 
         if (repo.existsByMailAndIdNot(dto.getMail(), id)) {
@@ -65,7 +67,7 @@ public class UtilisateurService {
         existing.setUsername(dto.getUsername());
 
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            existing.setPassword(dto.getPassword());
+            existing.setPassword(HashPwd.sha256(dto.getPassword()));
         }
 
         Utilisateur saved = repo.save(existing);
@@ -73,9 +75,9 @@ public class UtilisateurService {
     }
 
     public void delete(Integer id) {
-        if (!repo.existsById(Long.valueOf(id))) {
+        if (!repo.existsById(Integer.valueOf(id))) {
             throw new NotFoundException("Utilisateur " + id + " introuvable");
         }
-        repo.deleteById(Long.valueOf(id));
+        repo.deleteById(Integer.valueOf(id));
     }
 }
