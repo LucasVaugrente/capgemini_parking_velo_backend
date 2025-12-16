@@ -1,9 +1,9 @@
 # Parking Vélo - API
 
-# A rendre le 8 janvier
-# Oral le 9 janvier
+### A rendre le 8 janvier
+### Oral le 9 janvier
 
-Petite API Spring Boot (Java 17, Maven) pour gérer un parking de vélos : utilisateurs, vélos et réservations.
+Petite API Spring Boot (Java 21, Maven) pour gérer un parking de vélos : utilisateurs, vélos et réservations.
 
 Arborescence importante
 - `src/main/java/polytechdi4/parking_velo/`
@@ -18,7 +18,7 @@ Arborescence importante
 - `src/main/java/polytechdi4/parking_velo/ParkingVeloApplication.java` : point d'entrée
 
 Prérequis
-- Java 17+
+- Java 21+
 - Wrapper Maven fourni (`mvn`)
 - MariaDB
 
