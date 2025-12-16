@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import polytechdi4.parking_velo.dto.VeloCreateDTO;
 import polytechdi4.parking_velo.dto.VeloResponseDTO;
+import polytechdi4.parking_velo.dto.VeloUpdateDTO;
 import polytechdi4.parking_velo.service.VeloService;
 
 import java.util.List;
@@ -34,8 +35,7 @@ public class VeloController {
     }
 
     @PutMapping("/{id}")
-    public VeloResponseDTO update(@PathVariable Integer id,
-                                  @Valid @RequestBody VeloCreateDTO dto) {
+    public VeloResponseDTO update(@PathVariable Integer id, @Valid @RequestBody VeloUpdateDTO dto) {
         return veloService.update(id, dto);
     }
 

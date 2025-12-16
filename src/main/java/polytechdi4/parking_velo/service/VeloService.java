@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import polytechdi4.parking_velo.dto.VeloCreateDTO;
 import polytechdi4.parking_velo.dto.VeloResponseDTO;
+import polytechdi4.parking_velo.dto.VeloUpdateDTO;
 import polytechdi4.parking_velo.exception.NotFoundException;
 import polytechdi4.parking_velo.mapper.VeloMapper;
 import polytechdi4.parking_velo.model.Coordonnees;
@@ -24,14 +25,16 @@ public class VeloService {
     private final VeloMapper veloMapper;
 
     public VeloResponseDTO create(VeloCreateDTO dto) {
-        Coordonnees coord = coordonneesRepository.findById(Long.valueOf(dto.getCoordonneesId()))
-                .orElseThrow(() -> new NotFoundException("Coordonnées " + dto.getCoordonneesId() + " introuvables"));
+        Coordonnees coord = new Coordonnees();
+        coord.setLatitude(dto.getLatitude());
+        coord.setLongitude(dto.getLongitude());
+        Coordonnees savedCoord = coordonneesRepository.save(coord);
 
         Velo velo = new Velo();
         velo.setNom(dto.getNom());
         velo.setQuantite(dto.getQuantite());
         velo.setDescription(dto.getDescription());
-        velo.setCoordonnees(coord);
+        velo.setCoordonnees(savedCoord);
 
         Velo saved = veloRepository.save(velo);
         return veloMapper.toResponseDto(saved);
@@ -49,7 +52,7 @@ public class VeloService {
         return veloMapper.toResponseDtoList(veloRepository.findAll());
     }
 
-    public VeloResponseDTO update(Integer id, VeloCreateDTO dto) {
+    public VeloResponseDTO update(Integer id, VeloUpdateDTO dto) {
         Velo existing = veloRepository.findById(Long.valueOf(id))
                 .orElseThrow(() -> new NotFoundException("Vélo " + id + " introuvable"));
 
@@ -59,7 +62,12 @@ public class VeloService {
 
         Coordonnees coord = coordonneesRepository.findById(Long.valueOf(dto.getCoordonneesId()))
                 .orElseThrow(() -> new NotFoundException("Coordonnées " + dto.getCoordonneesId() + " introuvables"));
-        existing.setCoordonnees(coord);
+
+        coord.setLatitude(dto.getLatitude());
+        coord.setLongitude(dto.getLongitude());
+
+        Coordonnees savedCoord = coordonneesRepository.save(coord);
+        existing.setCoordonnees(savedCoord);
 
         Velo saved = veloRepository.save(existing);
         return veloMapper.toResponseDto(saved);
