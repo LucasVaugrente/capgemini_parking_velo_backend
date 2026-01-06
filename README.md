@@ -74,3 +74,9 @@ Create a reservation :
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{"utilisateurId":1,"veloId":2,"debut":"2025-11-01T09:00:00","fin":"2025-11-01T12:00:00"}' http://localhost:8080/api/reservations
 ```
+
+# 🙎‍♂️ Contributors
+* [Lucas Vaugrente](https://github.com/LucasVaugrente "Compte GitHub")
+* [Salma Mansouri](https://github.com/Salma-msr "Compte GitHub")
+* [Imane Abdou](https://github.com/VimaneAb "Compte GitHub")
+
